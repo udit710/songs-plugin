@@ -7,7 +7,7 @@ class SongsPlugin{
         add_action('admin_init', array($this, 'assign_caps'));
         
         // Register custom post type
-        add_action( 'init', array($this, 'songs_custom_post_type'));
+        add_action( 'init', array($this, 'register_songs_custom_post_type'));
         
         // Register taxonomy
         add_action( 'init', array($this, 'register_genre_taxonomy'));
@@ -38,7 +38,7 @@ class SongsPlugin{
         }
     }
 
-    public function songs_custom_post_type(){
+    public function register_songs_custom_post_type(){
         $args = array(
             'public' => true,
             'has_archive' => true,

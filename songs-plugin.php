@@ -9,8 +9,7 @@
 
 if (!defined('ABSPATH'))
 {
-    echo "Access Denied";
-    exit;
+    die("Access Denied");
 }
 
 require_once plugin_dir_path(__FILE__) . 'includes/class-songs-plugin.php';
