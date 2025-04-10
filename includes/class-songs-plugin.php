@@ -12,46 +12,29 @@ class SongsPlugin{
         // Add default term to taxonomy
         add_action('init', array($this, 'add_default_genre_term'));
         
-        // Register access limits
-        add_action('admin_init', array($this, 'assign_caps'));
-
-    }
-
-    /**
-     * Assign relevant capabilites
-     */
-    public function assign_caps() {
-        $role = get_role('administrator');
-        $capabilities = array(
-            'edit_song',
-            'read_song',
-            'delete_song',
-            'edit_songs',
-            'edit_others_songs',
-            'delete_songs',
-            'publish_songs',
-            'read_private_songs',
-            'delete_private_songs',
-            'delete_published_songs',
-            'delete_others_songs',
-            'edit_private_songs',
-            'edit_published_songs',
-            'manage_song_genres',
-            'edit_song_genres',
-            'delete_song_genres',
-            'assign_song_genres',
-        );
-
-        // Assign admin capabilites
-        foreach ( $capabilities as $cap ) {
-            $role->add_cap( $cap );
-        }
     }
 
     /**
      * Register the custom post type 'Songs'
      */
     public function register_songs_custom_post_type(){
+        $caps = [
+            'edit_post'             => 'edit_song',
+            'read_post'             => 'read_song',
+            'delete_post'           => 'delete_song',
+            'edit_posts'            => 'edit_songs',
+            'edit_others_posts'     => 'edit_others_songs',
+            'publish_posts'         => 'publish_songs',
+            'read_private_posts'    => 'read_private_songs',
+            'delete_posts'          => 'delete_songs',
+            'delete_private_posts'  => 'delete_private_songs',
+            'delete_published_posts'=> 'delete_published_songs',
+            'delete_others_posts'   => 'delete_others_songs',
+            'edit_private_posts'    => 'edit_private_songs',
+            'edit_published_posts'  => 'edit_published_songs',
+            'create_posts'          => 'edit_songs',
+        ];
+
         $args = array(
             'public' => true,
             'has_archive' => true,            
@@ -60,6 +43,7 @@ class SongsPlugin{
             'supports' => array('title', 'editor', 'excerpt', 'thumbnail', 'custom-fields'),
             'show_ui' => true,
             'capability_type' => array('song', 'songs'),
+            'capabilities' => $caps,
             'labels' => array(
                 'name' => 'Songs',
                 'singular_name' => 'Song',
