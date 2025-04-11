@@ -20,6 +20,7 @@ if (!defined('CPT_TAXONOMY_ROLE') )
 
 require_once plugin_dir_path(__FILE__) . 'includes/manage-roles-songs-plugin.php';
 require_once plugin_dir_path(__FILE__) . 'includes/class-songs-plugin.php';
+require_once plugin_dir_path(__FILE__) . 'includes/song-suggestion-form.php';
 
 $songs_plugin = new SongsPlugin();
 
