@@ -18,12 +18,10 @@ if (!defined('CPT_TAXONOMY_ROLE') )
     define('CPT_TAXONOMY_ROLE', 'administrator');
 }
 
-require_once plugin_dir_path(__FILE__) . 'includes/functions.php';
-
-// Activate on admin dashboard
-add_action( 'admin_init', 'songs_plugin_sync_caps' );
-
+require_once plugin_dir_path(__FILE__) . 'includes/manage-roles-songs-plugin.php';
 require_once plugin_dir_path(__FILE__) . 'includes/class-songs-plugin.php';
 
-// Activate the plugin
-new SongsPlugin();
+$songs_plugin = new SongsPlugin();
+
+// Activation tasks
+register_activation_hook( __FILE__, array( $songs_plugin, 'activate' ) );

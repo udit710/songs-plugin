@@ -4,20 +4,17 @@ class SongsPlugin{
     public function __construct(){
 
         // Register custom post type
-        add_action( 'init', array($this, 'register_songs_custom_post_type'));
+        add_action( 'init', [$this, 'sp_register_songs_custom_post_type']);
         
         // Register taxonomy
-        add_action( 'init', array($this, 'register_genre_taxonomy'));
-        
-        // Add default term to taxonomy
-        add_action('init', array($this, 'add_default_genre_term'));
+        add_action( 'init', [$this, 'sp_register_genre_taxonomy']);
         
     }
 
     /**
      * Register the custom post type 'Songs'
      */
-    public function register_songs_custom_post_type(){
+    public function sp_register_songs_custom_post_type(){
         $caps = [
             'edit_post'             => 'edit_song',
             'read_post'             => 'read_song',
@@ -35,75 +32,92 @@ class SongsPlugin{
             'create_posts'          => 'edit_songs',
         ];
 
-        $args = array(
-            'public' => true,
-            'has_archive' => true,            
-            'exclude_from_search' => false,
-            'publicly_queryable' => false,
-            'supports' => array('title', 'editor', 'excerpt', 'thumbnail', 'custom-fields'),
-            'show_ui' => true,
-            'capability_type' => array('song', 'songs'),
-            'capabilities' => $caps,
-            'labels' => array(
-                'name' => 'Songs',
-                'singular_name' => 'Song',
-                'add_new_item' => 'Add New Song',
-                'edit_item' => 'Edit Song',
-                'view_item' => 'View Song',
-                'view_items' => 'View Song',
-                'delete_item' => 'Delete Song',
-                'search_items' => 'Search Songs',
-                'not_found' => 'No Songs found',
-                'not_found_in_trash' => 'No Songs found in Trash',
-            ),
-            'menu_icon' => 'dashicons-playlist-audio',
-            'map_meta_cap' => true,
-        );
+        $labels = [
+            'name' => __('Songs', 'songs-plugin'),
+            'singular_name' => __('Song', 'songs-plugin'),
+            'add_new_item' => __('Add New Song', 'songs-plugin'),
+            'edit_item' => __('Edit Song', 'songs-plugin'),
+            'view_item' => __('View Song', 'songs-plugin'),
+            'view_items' => __('View Songs', 'songs-plugin'),
+            'delete_item' => __('Delete Song', 'songs-plugin'),
+        ];
 
-        register_post_type('songs_cpt',$args );
+        $args = [
+            'public' => false,
+            'has_archive' => false,            
+            'exclude_from_search' => true,
+            'publicly_queryable' => false,
+            'show_ui' => true,
+            'capability_type' => ['song', 'songs'],
+            'capabilities' => $caps,
+            'labels' => $labels,
+            'menu_icon' => 'dashicons-playlist-audio',
+            'supports' => ['title', 'editor','author', 'excerpt', 'thumbnail', 'custom-fields'],
+            'show_in_rest' => true,
+            'map_meta_cap' => true,
+        ];
+
+        register_post_type('sp_song',$args );
 
     }
 
     /**
      * Register the Taxonomy 'Genre' for the custom post type 'Songs'
      */
-    public function register_genre_taxonomy() {
-        $args = array(
-            'labels' => array(
-                'name' => 'Genre',
-                'singular_name' => 'Genre',
-                'add_new_item' => 'Add New Genre'
-            ),
-            'public' => true,
+    public function sp_register_genre_taxonomy() {
+        $args = [
+            'labels' => [
+                'name' => __('Genre','songs-plugin'),
+                'singular_name' => __('Genre','songs-plugin'),
+                'add_new_item' => __('Add New Genre','songs-plugin')
+            ],
+            'public' => false,
             'hierarchical' => true,
             'show_ui' => true,
             'show_in_rest' => true,
-            'rewrite' => array('slug' => 'genre'),
-            'capabilities' => array(
+            'capabilities' => [
                 'manage_terms' => 'manage_song_genres',
                 'edit_terms' => 'edit_song_genres',
                 'delete_terms' => 'delete_song_genres',
                 'assign_terms' => 'assign_song_genres',
-            ),
+            ],
             'map_meta_cap' => true,
-        );
+        ];
 
-        register_taxonomy('song_genre', 'songs_cpt', $args);
+        register_taxonomy('sp_genre', 'sp_song', $args);
     }
 
     /**
      * Add default term to Taxonomy 'Genre'
      */
-    public function add_default_genre_term() {
+    public function sp_add_default_genre_term() {
 
         // Add only if genre exists and term doesnt exist
-        if (taxonomy_exists( 'song_genre' )){
-            if (!term_exists('Classical', 'song_genre')) {
-                wp_insert_term('Classical', 'song_genre');
+        if (taxonomy_exists( 'sp_genre' )){
+            if (!term_exists('Classical', 'sp_genre')) {
+                wp_insert_term('Classical', 'sp_genre');
             }
         }
     }
+
+    /**
+     * Perform initial tasks on plugin activation
+     */
+    public function activate() {
+        
+        $this->sp_register_genre_taxonomy();
+
+        // Sync capabilities
+        if ( function_exists('songs_plugin_sync_caps') ) {
+            songs_plugin_sync_caps();
+        }
     
+        // Insert default term for taxonomy 'Genre'
+        $this->sp_add_default_genre_term();
+    
+        flush_rewrite_rules();
+    }
+
 }
 
 ?>
