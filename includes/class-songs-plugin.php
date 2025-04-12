@@ -1,5 +1,7 @@
 <?php
 
+require_once plugin_dir_path(__FILE__) . 'class-sp-rest-api.php';
+
 class SongsPlugin{
     public function __construct(){
 
@@ -9,6 +11,9 @@ class SongsPlugin{
         // Register taxonomy
         add_action( 'init', [$this, 'sp_register_genre_taxonomy']);
         
+        add_action('wp_enqueue_scripts', [$this, 'load_assets']);
+
+        new SP_REST_API();
     }
 
     /**
@@ -52,9 +57,9 @@ class SongsPlugin{
             'capabilities' => $caps,
             'labels' => $labels,
             'menu_icon' => 'dashicons-playlist-audio',
-            'supports' => ['title', 'editor','author', 'excerpt', 'thumbnail', 'custom-fields'],
             'show_in_rest' => true,
             'map_meta_cap' => true,
+            'supports' => ['title','author', 'excerpt', 'thumbnail'],
         ];
 
         register_post_type('sp_song',$args );
@@ -118,6 +123,21 @@ class SongsPlugin{
         flush_rewrite_rules();
     }
 
+    public function load_assets(){
+
+        wp_enqueue_script( 
+            'songs-form-js', 
+            plugin_dir_url( __FILE__ ).'../assets/js/songs-plugin.js', 
+            array('jquery'), 
+            1, 
+            true
+        );
+        wp_localize_script('songs-form-js', 'spData', array(
+            'rest_url' => get_rest_url(null, 'songs/v1/send-suggestions'),
+            'nonce' => wp_create_nonce('wp_rest')
+        ));
+
+    }
 }
 
 ?>
