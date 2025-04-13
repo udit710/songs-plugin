@@ -1,6 +1,8 @@
 <?php
 
-require_once plugin_dir_path(__FILE__) . 'class-sp-rest-api.php';
+namespace udit710\SongsPlugin;
+
+require_once plugin_dir_path(__FILE__) . 'SP_REST_API.php';
 
 class SongsPlugin{
     public function __construct(){

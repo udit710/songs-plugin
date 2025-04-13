@@ -1,5 +1,9 @@
 <?php
 
+namespace udit710\SongsPlugin;
+
+use WP_REST_Response;
+
 class SP_REST_API{
     public function __construct() {
         add_action('rest_api_init', [$this, 'sp_register_rest_api']);
@@ -35,7 +39,7 @@ class SP_REST_API{
         ]);
 
         if($post_id){
-            return new WP_REST_Response('Thank you for your enquiry!', 200);
+            return new WP_REST_Response('Thank you for your suggestion!', 200);
         }
 
         return new WP_REST_Response('Something went wrong.', 500);
