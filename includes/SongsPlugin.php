@@ -13,8 +13,10 @@ class SongsPlugin{
         // Register taxonomy
         add_action( 'init', [$this, 'sp_register_genre_taxonomy']);
         
+        // Load scripts from assets
         add_action('wp_enqueue_scripts', [$this, 'load_assets']);
 
+        // Register REST API endpoint
         new SP_REST_API();
     }
 
@@ -125,6 +127,9 @@ class SongsPlugin{
         flush_rewrite_rules();
     }
 
+    /**
+     * Load scripts and localize plugin data to be used by JS
+     */
     public function load_assets(){
 
         wp_enqueue_script( 

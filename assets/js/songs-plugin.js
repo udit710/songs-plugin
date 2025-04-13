@@ -1,4 +1,7 @@
-
+/**
+ * Songs Plugin JavaScript
+ * Handles the AJAX form submission for the Songs Plugin.
+ */
 (function($){
 
     $(document).ready(function(){

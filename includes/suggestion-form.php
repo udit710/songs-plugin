@@ -1,6 +1,10 @@
 <?php
 
 add_shortcode( 'song-suggestion-form', 'sp_render_form' );
+
+/**
+ * Render shortcode song suggestion form only if content owned by 'Author' role user
+ */
 function sp_render_form()
 {
     // Get current post
@@ -22,7 +26,7 @@ function sp_render_form()
 
     $html_path = plugin_dir_path(__FILE__) . '../templates/suggestion-form.html';
     if ( file_exists( $html_path ) ) {
-        return file_get_contents( $html_path );
+        return file_get_contents( $html_path ); // Load the HTML
     }
     return '';
     
