@@ -1,5 +1,13 @@
 # Songs Plugin
 
+## Table of Contents
+- [Description](#description)
+- [Features](#features)
+- [Installation via Composer](#installation-via-composer)
+- [Usage](#usage)
+- [Considerations](#considerations)
+- [References](#references)
+
 ## Description
 This is a simple plugin with custom post type Songs and Taxonomy Genres. It allows us to create a custom post type for songs and assign them to different genres. The plugin also includes a custom REST API endpoint which can be accessed by authors to submit song suggestions. The plugin can be installed via Composer.
 
